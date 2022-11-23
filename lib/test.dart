@@ -9,11 +9,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: _title,
       home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: const MyStatefulWidget(),
+        // appBar: AppBar(title: const Text(_title)),
+        body: MyStatefulWidget(),
       ),
     );
   }
@@ -103,94 +103,150 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            horizontalMargin: 100,
-            columns: const <DataColumn>[
-              DataColumn(label: Text('Zboží')),
-              DataColumn(label: Text('MJ')),
-              DataColumn(label: Text('Cena')),
-              DataColumn(label: Text('Začátek')),
-              DataColumn(label: Text('Dodáno')),
-              DataColumn(label: Text('Celkem')),
-              DataColumn(label: Text('Konec')),
-              DataColumn(label: Text('Prodáno')),
-              DataColumn(label: Text('Tržba'))
-            ],
-            rows: List<DataRow>.generate(
-              numItems,
-              (int index) => DataRow(
-                color: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                  // All rows will have the same selected color.
-                  if (states.contains(MaterialState.selected)) {
-                    return Theme.of(context).colorScheme.primary.withOpacity(1);
-                  }
-
-                  // Even rows will have a grey color.
-                  if (index.isEven) {
-                    return Colors.tealAccent.withOpacity(0.1);
-                  }
-                  return null; // Use default value for other states and odd rows.
-                }),
-                cells: <DataCell>[
-                  DataCell(Text(_listProducts[index].item)),
-                  DataCell(Text(_listProducts[index].measurementUnit)),
-                  DataCell(Text(_listProducts[index].price.toString())),
-                  DataCell(
-                    TextField(
-                      controller: _initialAmountControllerField[index],
-                      keyboardType: TextInputType.number,
-                      onTap: () {
-                        /*setState(() {
-                          _recalculate(index);
-                        });*/
-                      },
-                      readOnly: selected[index],
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(100.0),
+            child: AppBar(
+              bottom: const TabBar(
+                tabs: [
+                  SizedBox(
+                    height: 60.0,
+                    child: Center(
+                      child: Text("TRŽBA"),
                     ),
                   ),
-                  DataCell(
-                    TextField(
-                      controller: _addedAmountControllerField[index],
-                      keyboardType: TextInputType.number,
-                      onTap: () {
-                        /*setState(() {
-                          _recalculate(index);
-                        });*/
-                      },
-                      readOnly: selected[index],
+                  SizedBox(
+                    height: 60.0,
+                    child: Center(
+                      child: Text("PŘEPNOUT UŽIVATELE"),
                     ),
                   ),
-                  DataCell(Text(_totalInStockControllerField[index].text)),
-                  DataCell(
-                    TextField(
-                      controller: _afterShiftControllerField[index],
-                      keyboardType: TextInputType.number,
-                      onTap: () {
-                        /*setState(() {
-                          _recalculate(index);
-                        });*/
-                      },
-                      readOnly: selected[index],
+                  SizedBox(
+                    height: 60.0,
+                    child: Center(
+                      child: Text("ADMINISTRACE"),
                     ),
                   ),
-                  DataCell(Text(_totalSoldControllerField[index].text)),
-                  DataCell(Text(_totalMarketControllerField[index].text)),
+                  SizedBox(
+                    height: 60.0,
+                    child: Center(
+                      child: Text("NÁPOVĚDA"),
+                    ),
+                  ),
                 ],
-                selected: selected[index],
-                onSelectChanged: (bool? value) {
-                  setState(() {
-                    _recalculate(index);
-                    selected[index] = value!;
-                  });
-                },
               ),
+              title: const Text('Lucinka Beta 0.1'),
             ),
+          ),
+          body: TabBarView(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      horizontalMargin: 100,
+                      columns: const <DataColumn>[
+                        DataColumn(label: Text('Zboží')),
+                        DataColumn(label: Text('MJ')),
+                        DataColumn(label: Text('Cena')),
+                        DataColumn(label: Text('Začátek')),
+                        DataColumn(label: Text('Dodáno')),
+                        DataColumn(label: Text('Celkem')),
+                        DataColumn(label: Text('Konec')),
+                        DataColumn(label: Text('Prodáno')),
+                        DataColumn(label: Text('Tržba'))
+                      ],
+                      rows: List<DataRow>.generate(
+                        numItems,
+                        (int index) => DataRow(
+                          color: MaterialStateProperty.resolveWith<Color?>(
+                              (Set<MaterialState> states) {
+                            // All rows will have the same selected color.
+                            if (states.contains(MaterialState.selected)) {
+                              return Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(1);
+                            }
+                            // Even rows will have a grey color.
+                            if (index.isEven) {
+                              return Colors.blueAccent.withOpacity(0.1);
+                            }
+                            return null; // Use default value for other states and odd rows.
+                          }),
+                          cells: <DataCell>[
+                            DataCell(Text(_listProducts[index].item)),
+                            DataCell(
+                                Text(_listProducts[index].measurementUnit)),
+                            DataCell(
+                                Text(_listProducts[index].price.toString())),
+                            DataCell(
+                              TextField(
+                                controller:
+                                    _initialAmountControllerField[index],
+                                keyboardType: TextInputType.number,
+                                onChanged: (String text) {
+                                  setState(() {
+                                    _recalculate(index);
+                                  });
+                                },
+                                readOnly: selected[index],
+                              ),
+                            ),
+                            DataCell(
+                              TextField(
+                                controller: _addedAmountControllerField[index],
+                                keyboardType: TextInputType.number,
+                                onChanged: (String text) {
+                                  setState(() {
+                                    _recalculate(index);
+                                  });
+                                },
+                                readOnly: selected[index],
+                              ),
+                            ),
+                            DataCell(
+                                Text(_totalInStockControllerField[index].text)),
+                            DataCell(
+                              TextField(
+                                controller: _afterShiftControllerField[index],
+                                keyboardType: TextInputType.number,
+                                onChanged: (String text) {
+                                  setState(() {
+                                    _recalculate(index);
+                                  });
+                                },
+                                readOnly: selected[index],
+                              ),
+                            ),
+                            DataCell(
+                                Text(_totalSoldControllerField[index].text)),
+                            DataCell(
+                                Text(_totalMarketControllerField[index].text)),
+                          ],
+                          selected: selected[index],
+                          onSelectChanged: (bool? value) {
+                            setState(() {
+                              // _recalculate(index);
+                              selected[index] = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const Icon(Icons.directions_transit),
+              const Icon(Icons.directions_bike),
+              const Text("no fuj"),
+            ],
           ),
         ),
       ),
