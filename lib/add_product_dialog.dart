@@ -10,6 +10,11 @@ Future<void> dialogBuilder(BuildContext context, Function callback) {
         title: const Text('Basic dialog title'),
         content: const Text('A dialog'),
         actions: <Widget>[
+          TextFormField( // todo kaspar
+            // key: _productField, // todo kaspar
+            decoration: InputDecoration(
+                hintText: "kurwa", fillColor: Colors.amber.shade400),
+          ),
           TextButton(
             style: TextButton.styleFrom(
               textStyle: Theme.of(context).textTheme.labelLarge,

@@ -160,8 +160,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
               Positioned(
                 top: 10,
-                right: 20,
-                child: OutlinedButton(
+                right: -20,
+                child: TextButton(
                   onPressed: () =>
                       dialogBuilder(context, (DataObject dataObject) {
                         listProducts.add(dataObject);
