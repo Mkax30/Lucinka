@@ -1,32 +1,33 @@
 import 'package:flutter/widgets.dart';
+import 'package:test1/lucinka/product_model.dart';
+
 import './dbprovider.dart';
-import './memo_model.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MemoDbProvider memoDb = MemoDbProvider();
 
-  final memo = MemoModel(
+  final product = ProductModel(
     id: 1,
     title: 'Title 1',
-    content: 'Note 1',
+    mj: 'ks',
+    price: '80',
   );
 
-  await memoDb.addItem(memo);
-  var memos = await memoDb.fetchMemos();
-  print(memos[0].title); //Title 1
+  await ProductDbProvider.instance.addItem(product);
+  var products = await ProductDbProvider.instance.fetchProducts();
+  print(products[0].title); //Title 1
 
-  final newmemo = MemoModel(
-    id: memo.id,
+  final newProduct = ProductModel(
+    id: product.id,
     title: 'Title 1 changed',
-    content: memo.content,
+    mj: product.mj,
+    price: product.price,
   );
 
-  await memoDb.updateMemo(memo.id, newmemo);
-  var updatedmemos = await memoDb.fetchMemos();
-  print(updatedmemos[0].title); //Title 1 changed
+  await ProductDbProvider.instance.updateProduct(product.id, newProduct);
+  var updatedProducts = await ProductDbProvider.instance.fetchProducts();
+  print(updatedProducts[0].title); //Title 1 changed
 
-  await memoDb.deleteMemo(memo.id);
-  print(await memoDb.fetchMemos()); //[]
-
+  await ProductDbProvider.instance.deleteProduct(product.id);
+  print(await ProductDbProvider.instance.fetchProducts()); //[]
 }

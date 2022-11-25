@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test1/lucinka/dbprovider.dart';
+import 'package:test1/lucinka/product_model.dart';
 
 void main() => runApp(const MyApp());
 
@@ -41,6 +43,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const int numItems = 16;
   List<bool> selected = List<bool>.generate(numItems, (int index) => false);
 
+  final List<TextEditingController> _productNameField =
+  List.generate(numItems, (i) => TextEditingController());
+  final List<TextEditingController> _productPriceField =
+  List.generate(numItems, (i) => TextEditingController());
   final List<TextEditingController> _initialAmountControllerField =
       List.generate(numItems, (i) => TextEditingController());
   final List<TextEditingController> _addedAmountControllerField =
@@ -57,6 +63,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   // final List<DataObject> _dataObjectList = List.generate(1000, (index) {
   //   return DataObject(item: '');
   // });
+
+  // final _products = <>["",""];
+
+  final _productFieldTest = <String> ["Caipiroshka", "Chupito"];
 
   final _listProducts = <DataObject>[
     DataObject(item: "Caipiroshka", measurementUnit: "ks", price: 80),
@@ -193,17 +203,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 }),
                                 cells: <DataCell>[
                                   DataCell(
-                                    Text(
-                                      _listProducts[index].item,
+                                    TextField(
+                                      onChanged: (value) {
+                                        ProductModel product = ProductModel(id: 1, title: value, mj: "ks", price: "90");
+                                        ProductDbProvider.instance.addItem(product);
+                                      },
                                     ),
-                                    /*onLongPress: () => showDialog<String>(
+                                    onLongPress: () => showDialog<String>(
                                       context: context,
                                       builder: (BuildContext context) =>
                                           AlertDialog(
-                                        title: const Text('Upozornění'),
-                                        content:
-                                            const Text('Založit nový produkt?'),
+                                        title: const Text('Upravit produkt?'),
+                                        // content:
+                                        //     const Text('Založit nový produkt?'),
                                         actions: <Widget>[
+                                          TextField(),
                                           ElevatedButton(
                                             onPressed: () => Navigator.pop(
                                                 context, 'Zrušit'),
@@ -216,12 +230,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           ),
                                         ],
                                       ),
-                                    ),*/
+                                    ),
                                   ),
                                   DataCell(Text(
                                       _listProducts[index].measurementUnit)),
-                                  DataCell(Text(
-                                      _listProducts[index].price.toString())),
+                                  DataCell(TextField(controller:
+                                      _productPriceField[index])),
                                   DataCell(
                                     TextField(
                                       controller:
