@@ -3,7 +3,7 @@ import 'package:test1/lucinka/product_model.dart';
 
 import './dbprovider.dart';
 
-void main() async {
+/*void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final product = ProductModel(
@@ -30,4 +30,4 @@ void main() async {
 
   await ProductDbProvider.instance.deleteProduct(product.id);
   print(await ProductDbProvider.instance.fetchProducts()); //[]
-}
+}*/
