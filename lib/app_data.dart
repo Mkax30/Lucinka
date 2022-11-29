@@ -1,7 +1,7 @@
 import 'data_object.dart';
 
 var listProducts = <DataObject>[
-  DataObject(item: "Caipiroshka", measurementUnit: "ks", price: 80),
+  DataObject(item: "Caipiroshka", initialAmount: 5, measurementUnit: "ks", price: 80),
   DataObject(item: "Chupito", measurementUnit: "ks", price: 45),
   DataObject(item: "Chameleon", measurementUnit: "ks", price: 50),
   DataObject(item: "Virgin chameleon", measurementUnit: "ks", price: 45),

@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:test1/lucinka/dbprovider.dart';
 import 'package:test1/lucinka/product_model.dart';
+
+import '../app_data.dart';
+import '../data_object.dart';
 
 void main() => runApp(const MyApp());
 
@@ -22,12 +27,39 @@ class MyStatefulWidget extends StatefulWidget {
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  static const int numItems = 16;
-  List<bool> selected = List<bool>.generate(numItems, (int index) => false);
+class _MyStatefulWidgetState extends State<MyStatefulWidget> with SingleTickerProviderStateMixin {
+  // static const int numItems = 16;
+  // List<bool> selected = List<bool>.generate(numItems, (int index) => false);
+
+  // static const List<Tab> myTabs = <Tab>[
+  //   Tab(text: 'LEFT'),
+  //   Tab(text: 'RIGHT'),
+  // ];
+
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(vsync: this, length: 5);
+
+    tabController.addListener(() {
+      if(tabController.index == 0){
+        listProducts = <DataObject>[
+          DataObject(item: "Beton", measurementUnit: "ks", price: 10),
+          DataObject(item: "Železobeton", measurementUnit: "ks", price: 26),
+          DataObject(item: "Záloha lahev", measurementUnit: "ks", price: 3),
+          DataObject(item: "Doplatek", measurementUnit: "kč", price: 1),
+          DataObject(item: "Gril", measurementUnit: "kč", price: 1),
+        ];
+      }
+    });
+  }
+
+  static int numItems = 16;
 
   final List<TextEditingController> _productTitleControllerField =
-      List.generate(numItems, (i) => TextEditingController());
+      List.empty(growable: true);
   final List<TextEditingController> _productPriceControllerField =
       List.generate(numItems, (i) => TextEditingController());
   final List<TextEditingController> _measureUnitControllerField =
@@ -169,8 +201,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
               elevation: 8,
               bottom: TabBar(
+                controller: tabController,
+
                 overlayColor:
                     MaterialStateProperty.all<Color>(Colors.deepPurpleAccent),
+                // tabs: myTabs,
                 tabs: [
                   Tab(
                     child: Text("TRŽBA", style: _tabTextStyle),
@@ -192,10 +227,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
           ),
           body: TabBarView(
+            controller: tabController,
             children: [
-              // ///////////////////////////////////////////////////////////////
-              // tab bar 1
-              // ///////////////////////////////////////////////////////////////
+              // ...
+              // myTabs.map((e) => Text("aaa: $e"))
+
+              ///////////////////////////////////////////////////////////////
+              /////tab bar 1
+              ///////////////////////////////////////////////////////////////
               Center(
                 child: Stack(
                   children: [
@@ -235,41 +274,38 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       Text('Tržba', style: _headerTextStyle)),
                             ],
                             rows: List<DataRow>.generate(
-                              numItems,
+                              listProducts.length,
                               (int index) => DataRow(
                                 cells: <DataCell>[
                                   DataCell(Text(
-                                      _productTitleControllerField[index]
-                                          .text)),
+                                      listProducts[index].item)),
                                   DataCell(Text(
-                                      _measureUnitControllerField[index].text)),
+                                      listProducts[index].measurementUnit)),
                                   DataCell(Text(
-                                      _productPriceControllerField[index]
-                                          .text)),
+                                      listProducts[index].price.toString())),
                                   DataCell(
                                     TextField(
-                                      controller:
-                                          _initialAmountControllerField[index],
+                                      controller: TextEditingController()..text = listProducts[index].initialAmount.toString(),
                                       keyboardType: TextInputType.number,
-                                      onChanged: (String text) {
+                                      onChanged: (String text) async {
+
+                                        // await //Future funkce
+
                                         setState(() {
                                           _recalculate(index);
                                         });
                                       },
-                                      readOnly: selected[index],
                                     ),
                                   ),
                                   DataCell(
                                     TextField(
-                                      controller:
-                                          _addedAmountControllerField[index],
+                                      controller: TextEditingController()..text = listProducts[index].addedAmount.toString(),
                                       keyboardType: TextInputType.number,
                                       onChanged: (String text) {
                                         setState(() {
                                           _recalculate(index);
                                         });
                                       },
-                                      readOnly: selected[index],
                                     ),
                                   ),
                                   DataCell(Text(
@@ -287,7 +323,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           },
                                         );
                                       },
-                                      readOnly: selected[index],
                                     ),
                                   ),
                                   DataCell(
@@ -307,9 +342,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ],
                 ),
               ),
-              // ///////////////////////////////////////////////////////////////
-              // tab bar 2
-              // ///////////////////////////////////////////////////////////////
+              ///////////////////////////////////////////////////////////////
+              ////////tab bar 2
+              ///////////////////////////////////////////////////////////////
               Center(
                 child: Column(
                   children: [
@@ -470,7 +505,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                               context: context,
                                               builder: (BuildContext context) =>
                                                   AlertDialog(
-                                                shadowColor: Colors.deepPurple,
+                                                // shadowColor: Colors.deepPurple,
                                                 elevation: 8,
                                                 backgroundColor:
                                                     Colors.deepPurple[50],
